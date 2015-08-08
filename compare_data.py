@@ -1,13 +1,20 @@
 
 import os
+import gzip
 
 LETICIA_DIR = 'String_Siblings_updated'
 LETICIA_ID_INDEX = 4
 LETICIA_SCORE_INDEX = -1
 LETICIA_DELIMITER = '\t'
 
+ALP_FILE = '9606.protein.links.detailed.v10.txt.gz'
+ALP_ID_INDEX = 0
+ALP_SCORE_INDEX = -1
+ALP_DELIMITER = ' '
+
 def run():
 	leticia_data = get_leticia_data(LETICIA_ID_INDEX, LETICIA_SCORE_INDEX, LETICIA_DELIMITER)
+	alp_data = get_alp_data(ALP_ID_INDEX, ALP_SCORE_INDEX, ALP_DELIMITER)
 
 def get_leticia_data(id_index, score_index, delimiter):
 	edges = dict()
@@ -17,6 +24,13 @@ def get_leticia_data(id_index, score_index, delimiter):
 		in_file = open(file_name, 'r')
 		print 'Processing file ' + f + '...'
 		process_file(edges, in_file, id_index, score_index, delimiter)
+	return edges
+
+def get_alp_data(id_index, score_index, delimiter):
+	edges = dict()
+	in_file = gzip.open(ALP_FILE, 'rb')
+	process_file(edges, in_file, id_index, score_index, delimiter)
+	return edges
 
 
 def process_file(edge_map, in_file, id_index, score_index, delimiter):
@@ -32,7 +46,7 @@ def process_file(edge_map, in_file, id_index, score_index, delimiter):
 			score = int(float(data[score_index]) * 1000)
 			key = (id1, id2) if id1 < id2 else (id2, id1)
 			if key in edge_map and edge_map[key] != score:
-				print 'INCONSITENCY DETECTED for key ' + key + '. Scores ' + str(score) + ' & ' + edge_map[key]
+				print 'INCONSITENCY DETECTED for key ' + str(key) + '. Scores ' + str(score) + ' & ' + str(edge_map[key])
 				inconsistency = True
 			else:
 				edge_map[key] = score
