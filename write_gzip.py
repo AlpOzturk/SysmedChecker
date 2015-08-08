@@ -20,7 +20,7 @@ def run():
 	for key in edges:
 		prot1 = PROT_PREFIX + key[0]
 		prot2 = PROT_PREFIX + key[1]
-		to_write.append(ALP_DELIMITER.join([key[0], key[1], '0', '0', '0', '0', '0', '0', '0', str(edges[key])]))
+		to_write.append(ALP_DELIMITER.join([prot1, prot2, '0', '0', '0', '0', '0', '0', '0', str(edges[key])]))
 	out_file.write('\n'.join(to_write))
 	out_file.close()
 
